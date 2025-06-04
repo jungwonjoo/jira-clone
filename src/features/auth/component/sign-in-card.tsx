@@ -12,28 +12,34 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import Link from 'next/link';
+import { loginSchema } from '../schema';
+import { useLogin } from '../api/use-login';
 
 
-const formSchema = z.object({
-    email: z.string().min(1, "이메일을 입력해주세요").email("올바른 이메일 형식을 입력해주세요"),
-    password: z.string().min(1, "비밀번호를 입력해주세요").min(8, "비밀번호는 최소 8글자 이상이어야 합니다")
-})
+// const formSchema = z.object({
+//     email: z.string().min(1, "이메일을 입력해주세요").email("올바른 이메일 형식을 입력해주세요"),
+//     password: z.string().min(1, "비밀번호를 입력해주세요").min(8, "비밀번호는 최소 8글자 이상이어야 합니다")
+// })
 
+
+const IconFcGoogle = FcGoogle as React.FC<React.SVGProps<SVGSVGElement>>
+const IconFaGithub = FaGithub as React.FC<React.SVGProps<SVGSVGElement>>
 
     
 const SignInCard = () => {
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver:zodResolver(formSchema),
+    const {mutate} = useLogin()
+
+    const form = useForm<z.infer<typeof loginSchema>>({
+        resolver:zodResolver(loginSchema),
         defaultValues:{
             email:'',
             password:''
         }
     })
     
-    const onSubmit = (values:z.infer<typeof formSchema>) => {
-        console.log(values);
-        
+    const onSubmit = (values:z.infer<typeof loginSchema>) => {
+        mutate({json:values})        
     }
      
     
@@ -122,7 +128,7 @@ const SignInCard = () => {
                     size={'lg'}
                     className='w-full'
                 >
-                    <FcGoogle className="mr-2 size-5"/>
+                    <IconFcGoogle className="mr-2 size-5"/>
                     Login width Google
                 </Button>
                 <Button 
@@ -131,7 +137,7 @@ const SignInCard = () => {
                     size={'lg'}
                     className='w-full'
                 >
-                    <FaGithub className="mr-2 size-5"/>
+                    <IconFaGithub className="mr-2 size-5"/>
                     Login width Github
                 </Button>
             </CardContent>

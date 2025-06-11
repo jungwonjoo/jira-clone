@@ -12,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import Link from 'next/link';
-import { loginSchema } from '../schema';
+import { loginSchema } from '../schemas';
 import { useLogin } from '../api/use-login';
 
 

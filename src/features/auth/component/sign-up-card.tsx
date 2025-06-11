@@ -2,8 +2,8 @@ import {z} from 'zod'
 import {useForm} from 'react-hook-form'
 import {zodResolver} from "@hookform/resolvers/zod";
 
-import { FcGoogle } from "react-icons/fc";   
-import { FaGithub } from "react-icons/fa";   
+// import { FcGoogle } from "react-icons/fc";   
+// import { FaGithub } from "react-icons/fa";   
 
 import DottedSeparatort from '@/components/dotted-separator';
 import { Button } from '@/components/ui/button';
@@ -12,19 +12,24 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
+import { registerSchema } from '../schemas';
+
+import {useRegister} from '../api/use-register'
 
 
-const formSchema = z.object({
-    name:z.string().trim().min(1, "이름을 입력해주세요")
-,    email: z.string().min(1, "이메일을 입력해주세요").email("올바른 이메일 형식을 입력해주세요"),
-    password: z.string().min(1, "비밀번호를 입력해주세요").min(8, "비밀번호는 최소 8글자 이상이어야 합니다")
-})
+// const formSchema = z.object({
+//     name:z.string().trim().min(1, "이름을 입력해주세요"),
+//     email: z.string().min(1, "이메일을 입력해주세요").email("올바른 이메일 형식을 입력해주세요"),
+//     password: z.string().min(1, "비밀번호를 입력해주세요").min(8, "비밀번호는 최소 8글자 이상이어야 합니다")
+// })
 
 
 const SignUpCard = () => {
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver:zodResolver(formSchema),
+    const {mutate} = useRegister();
+
+    const form = useForm<z.infer<typeof registerSchema>>({
+        resolver:zodResolver(registerSchema),
         defaultValues:{
             name:'',
             email:'',
@@ -32,10 +37,19 @@ const SignUpCard = () => {
         }
     })
 
-    const onSubmit = (values:z.infer<typeof formSchema>) => {
-        console.log(values);
-            
+
+    const onSubmit = (values: z.infer<typeof registerSchema>) => {
+        mutate({ json: values }, {
+            onError: (error) => {
+                console.error("회원가입 실패:", error);
+                alert("회원가입 중 오류가 발생했습니다.");
+            },
+            onSuccess: (data) => {
+                console.log("회원가입 성공", data);
+            }
+        })
     }
+
 
     return ( 
         <Card className='w-full h-full md:w-[487px] border-none shadow-none'>
@@ -68,7 +82,7 @@ const SignUpCard = () => {
                                     <FormControl>
                                         <Input
                                             {...field}
-                                            type='naem'
+                                            type='name'
                                             placeholder='Enter name'
                                         />
                                     </FormControl>
@@ -155,7 +169,7 @@ const SignUpCard = () => {
                     size={'lg'}
                     className='w-full'
                 >
-                    <FcGoogle className="mr-2 size-5"/>
+                    {/* <FcGoogle className="mr-2 size-5"/> */}
                     Login width Google
                 </Button>
                 <Button 
@@ -164,7 +178,7 @@ const SignUpCard = () => {
                     size={'lg'}
                     className='w-full'
                 >
-                    <FaGithub className="mr-2 size-5"/>
+                    {/* <FaGithub className="mr-2 size-5"/> */}
                     Login width Github
                 </Button>
             </CardContent>
@@ -183,3 +197,4 @@ const SignUpCard = () => {
 }
  
 export default SignUpCard;
+

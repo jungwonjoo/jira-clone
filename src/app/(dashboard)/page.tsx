@@ -1,5 +1,4 @@
-import { UserButton } from '@/features/auth/component/user-button';
-import { getCurrent } from './(auth)/action';
+import { getCurrent } from '../(auth)/action';
 import { redirect } from 'next/navigation';
 
 export default async function Home() {
@@ -8,7 +7,8 @@ export default async function Home() {
   if(!user) redirect("/sign-in")
   return (
     <div>
-      <UserButton/>
+      {/* <UserButton/> */}
+      This is a home page
     </div>
   );
 }
